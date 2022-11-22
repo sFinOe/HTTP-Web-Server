@@ -1,0 +1,76 @@
+
+
+
+# minimum config
+
+
+server {
+	listen 8080;
+	host 127.0.0.1;
+	location / {
+		root /data/nothing/
+	}
+}
+
+server {
+	listen 9090;
+	listen 9010;
+	host 0.0.0.0;
+	location / {
+		root /data/
+	}
+}
+# default host is 0.0.0.0 
+# for example here we will alias 0.0.0.0:9000 to domain.com...
+
+## server without location
+server {
+	## 0.0.0.0:9000
+	listen 9000;
+	sever_name domain.com
+	server_name domain2.com
+	error_page_403 /data/error.html;
+	error_page_402 /data/error.hmtl;
+	## key error_page value 
+	client_max_body_size 1000; # bytes
+}
+
+server {
+	listen 1000;
+	sever_name example.com
+	error_page_403 /data/error.html;
+	error_page_402 /data/error.hmtl;
+	## key error_page value 
+	client_max_body_size 1000; # bytes
+	
+	## add path to root path
+	## minimum configuration
+	location /a {
+		root /data/a;
+	}
+
+	location / {
+	root /data/;
+	autoindex on;
+	index index.html; 
+	allow [GET, POST, DELETE];
+	}
+
+	## cgi optional
+	location cgi/ {
+		root /data/;
+		cgi_bin /bin/python3;
+	}
+}
+
+
+
+
+# data structures implementations
+# servers classes will be stored in vector and handeled by the main function 
+
+
+# server class 
+
+
+
