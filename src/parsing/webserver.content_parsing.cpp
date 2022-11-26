@@ -6,29 +6,48 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:28:36 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/11/21 16:51:52 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/11/25 18:52:19 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <common.hpp>
 #include <webserver.hpp>
 
-void Webserver::root_block(locations_t &_locations, config_t _server_data)
+void Webserver::initialize_block(locations_t& _locations, config_t& _server_data)
 {
     for (config_it data_it = _server_data.begin(); data_it != _server_data.end(); data_it++) {
-        if (data_it->first == "root"){
-            for (locations_it locs_it = _locations.begin(); locs_it != _locations.end(); locs_it++){
+        if (data_it->first == "root") {
+            for (locations_it locs_it = _locations.begin(); locs_it != _locations.end(); locs_it++) {
                 map<string, string> data = locs_it->second;
-                if (data.find("root") == data.end() && data.find("return_301") == data.end()){
+                if (data.find("root") == data.end() && data.find("return_301") == data.end()) {
                     data.insert(make_pair(data_it->first, data_it->second));
                     locs_it->second = data;
                 }
             }
         }
     }
+    if (_server_data.find("error_page_400") == _server_data.end())
+        _server_data.insert(make_pair("error_page_400", "/home/tankb0y/Desktop/errors/error_400.html"));
+    if (_server_data.find("error_page_403") == _server_data.end())
+        _server_data.insert(make_pair("error_page_403", "/home/tankb0y/Desktop/errors/error_403.html"));
+    if (_server_data.find("error_page_404") == _server_data.end())
+        _server_data.insert(make_pair("error_page_404", "/home/tankb0y/Desktop/errors/error_404.html"));
+    if (_server_data.find("error_page_405") == _server_data.end())
+        _server_data.insert(make_pair("error_page_405", "/home/tankb0y/Desktop/errors/error_405.html"));
+    if (_server_data.find("error_page_413") == _server_data.end())
+        _server_data.insert(make_pair("error_page_413", "/home/tankb0y/Desktop/errors/error_413.html"));
+    if (_server_data.find("error_page_500") == _server_data.end())
+        _server_data.insert(make_pair("error_page_500", "/home/tankb0y/Desktop/errors/error_500.html"));
+    if (_server_data.find("include") == _server_data.end())
+        _server_data.insert(make_pair("include", "config/mime.types"));
+    if (_server_data.find("server_name") == _server_data.end())
+        _server_data.insert(make_pair("server_name", ""));
+    if (_server_data.find("client_max_body_size") == _server_data.end())
+        _server_data.insert(make_pair("client_max_body_size", "1024"));
+
 }
 
-map<string, map<string, string> > Webserver::parse_locations(string &line, locations_t _locations)
+map<string, map<string, string> > Webserver::parse_locations(string& line, locations_t _locations)
 {
     regmatch_t index;
     regex_t regex;
@@ -100,13 +119,13 @@ map<string, map<string, string> > Webserver::parse_locations(string &line, locat
     return _locations;
 }
 
-multimap<string, string> Webserver::parse_server_data(string &line, config_t _server_data)
+multimap<string, string> Webserver::parse_server_data(string& line, config_t _server_data)
 {
     regex_t regex;
     regmatch_t index;
     string tmp;
     vector<string> data;
-    size_t ret = 0,_key_len, _value_len;
+    size_t ret = 0, _key_len, _value_len;
     // here is same as location parsing i use regex pattern to grab data inside brackets of server ==>  {listen 8080; host 0.0.0.0 .....}
     regcomp(&regex, "\\{[^}]*\\}", REG_EXTENDED);
     ret = regexec(&regex, line.c_str(), 1, &index, 0);

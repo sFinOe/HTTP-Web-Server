@@ -6,14 +6,14 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:05:53 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/11/17 17:25:21 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/11/25 21:07:26 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <common.hpp>
 #include <webserver.hpp>
 
-vector<string> Webserver::split_servers(char *path)
+vector<string> Webserver::split_servers(char* path)
 {
     string line, str;
     fstream file(path, fstream::in);
@@ -36,7 +36,7 @@ vector<string> Webserver::split_servers(char *path)
         if (valid == 1 && brackets == 0 && v_server == 1) {
             server_line.push_back(line.substr(0, i + 1));
             line.erase(0, i + 1);
-            if(syntax_block(line))
+            if (syntax_block(line))
                 throw Webserver::parsingerror();
             valid = 0;
             i = 0;
@@ -51,7 +51,7 @@ vector<string> Webserver::split_servers(char *path)
     return server_line;
 }
 
-vector<Webserver> Webserver::parse(char *path)
+vector<Webserver> Webserver::parse(char* path)
 {
     locations_t locations;
     mime_t mime_types;
@@ -68,7 +68,7 @@ vector<Webserver> Webserver::parse(char *path)
         // now start parsing server data
         server_data = parse_server_data(*it, server_data);
         // mime Types parsing same as server data parsing !!!!!
-        root_block(locations, server_data);
+        initialize_block(locations, server_data);
         mime_types = mime_parsing(server_data);
         // all the data is done for now and now time to check error if (all good) => continue else exit(with error type) made with love <3
         servers.push_back(Webserver(server_data, locations, mime_types));
@@ -77,17 +77,17 @@ vector<Webserver> Webserver::parse(char *path)
         server_data.clear();
         mime_types.clear();
     }
-    if (servers.empty()) {
-        cerr << "error : empty server" << endl, throw Webserver::parsingerror();
-    }
+    // if (servers.empty()) {
+    //     cerr << "error : empty server" << endl, throw Webserver::parsingerror();
+    // }
     // here where im gonna check for error if (good) return else exit(with error type) love
     for (servers_it srv_it = servers.begin(); srv_it != servers.end(); srv_it++)
     {
         error_parsing(srv_it->_server_data, srv_it->_location_data);
         //check for duplicate server names in server blocks !!!
         if (srv_it + 1 != servers.end()) {
-            servers_it tmp = srv_it + 1;
-            duplicate_server_name(srv_it->_server_data, tmp->_server_data);
+            for (servers_it tmp = srv_it + 1; tmp != servers.end(); tmp++)
+                duplicate_server_name(srv_it->_server_data, tmp->_server_data, "listen");
         }
     }
     return servers;

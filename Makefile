@@ -11,7 +11,8 @@ INCLUDE = ./includes/webserver.hpp ./includes/common.hpp
 INCLUDES = -I./includes/ -I./tests/
 TEST_INCLUDES = -I./includes/ -I./tests/
 #wildcard in src/
-SRCS = $(wildcard src/*.cpp src/parsing/*.cpp)
+SRCS = $(wildcard src/*.cpp src/parsing/*.cpp src/running/*.cpp)
+
 
 # test srcs include all srcs except main.cpp
 TEST_SRCS = $(wildcard tests/*.cpp) $(filter-out src/main.cpp, $(SRCS))
@@ -28,6 +29,7 @@ $(PREFIX) :
 	@mkdir -p $(PREFIX)
 	@mkdir -p $(PREFIX)/src
 	@mkdir -p $(PREFIX)/src/parsing
+	@mkdir -p $(PREFIX)/src/running
 
 $(NAME): $(PREFIX) $(OBJS) $(INCLUDE)
 	$(CC) $(CXXFLAGS) $(INCLUDES) $(OBJS) -o $(NAME)

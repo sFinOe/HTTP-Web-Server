@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:10:42 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/11/14 19:07:04 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/11/25 19:12:08 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@
 #define DUP_DATA_ERR 8
 #define NO_DATA 9
 
+/*********** METHODS *********/
+
+#define GET 1
+#define POST 2
+#define DELETE 3
+
+
 /***** define of server *****/
 
 #define SERVER_TIMEOUT 15
@@ -39,6 +46,7 @@
 #include <regex.h>
 #include <vector>
 #include <map>
+#include <set>
 #include <utility>
 #include <stdlib.h>
 #include <algorithm>
@@ -56,6 +64,7 @@
 
 using std::multimap;
 using std::map;
+using std::set;
 using std::make_pair;
 using std::string;
 using std::vector;

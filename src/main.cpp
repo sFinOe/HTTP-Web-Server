@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:40 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/11/17 15:45:00 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/11/22 12:07:42 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,39 +43,29 @@
 
 /********** For testing !!!! ***********/
 
- 
+
 /**************************************/
 
 int main(int argc, char** argv)
 {
-  
+
   (void)argv;
   (void)argc;
   // obj webservs hold vector<webserver> servers!!!! constractor
   // Webserver websrvs(Webserver::parse(argv[1]));
   vector<Webserver> websrvs;
   try {
-    
-  websrvs = Webserver::parse(argv[1]);
-  } catch (std::exception& e) {
+
+    websrvs = Webserver::parse(argv[1]);
+  }
+  catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
   };
   vector<Webserver>::iterator it = websrvs.begin();
-  
-
-  for (; it != websrvs.end(); it++) {
-    
-    cout << "server data" << endl;
-    it->dump_server_data();
-    cout << "location data" << endl;
-    it->dump_location_data();
-    // cout << "mime data" << endl;
-    // it->dump_mime_data();
-
-    
+  for (; it != websrvs.end(); ++it) {
+    it->up();
   }
-
-    
+  websrvs[0].run(websrvs);
 
   return 0;
 }

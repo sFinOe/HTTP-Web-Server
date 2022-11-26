@@ -26,6 +26,8 @@ https://www.quora.com/What-is-Common-Gateway-Interface
 ## how many TCP connection a sys can handle cb?
 https://www.quora.com/What-is-the-maximum-number-of-concurrent-tcp-connections-system-can-support
 
+## how to determine the end of an http request ? 
+https://greenbytes.de/tech/webdav/rfc7230.html#message.body.length
 
 ## most important resource 
 <br> https://berb.github.io/diploma-thesis/original/

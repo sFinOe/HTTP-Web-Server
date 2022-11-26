@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.err_parsing.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:09:25 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/11/21 19:15:35 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/11/25 18:08:16 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,13 @@ int Webserver::duplicate_location_data(string path, mime_t location)
 int key_comp(string key)
 {
     // check for undifend key anything other sting names[6] is error
-    string names[8] = {"client_max_body_size", "error_page_403",
-                       "error_page_404", "host", "listen", "server_name", "include", "root"};
+    string names[13] = {"client_max_body_size", "error_page_400", "error_page_403",
+                       "error_page_404", "error_page_405", "error_page_413", "error_page_500",
+                       "host", "listen", "server_name", "include", "root"};
 
     if (key.empty())
         return 1;
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 13; i++) {
         if (names[i] == key)
             return 0;
     }
@@ -48,11 +49,13 @@ int Webserver::value_comp(string key, string value)
     long total;
     fstream exists;
     DIR *dir;
-    string names[8] = {"client_max_body_size", "error_page_403",
-    "error_page_404", "host", "listen", "server_name", "include", "root"};
+    string names[12] = {"client_max_body_size", "error_page_403",
+    "error_page_404", "host", "listen", "server_name", "include", "root", "error_page_400",
+    "error_page_405", "error_page_413", "error_page_500"};
 
-    if (value.empty())
-        return 1;
+    if (key != names[5])
+        if (value.empty())
+            return 1;
     // check client_max_body_size is num and bigger than 0
     if (names[0] == key) {
         total = atol(value.c_str());
@@ -60,7 +63,8 @@ int Webserver::value_comp(string key, string value)
             return 1;
     }
     // check error_page should be html and valid path
-    if (names[1] == key || names[2] == key) {
+    if (names[1] == key || names[2] == key || names[8] == key
+        || names[9] == key || names[10] == key || names[11] == key) {
         exists.open(value.c_str(), fstream::in);
         if (!exists || value.find(".html") == string::npos)
             return 1;
@@ -254,8 +258,8 @@ int Webserver::data_value_duplicate(config_t server_data)
     config_it tmp;
     for (config_it it = server_data.begin(); it != server_data.end(); it++) {
         if (it->first == "listen" || it->first == "client_max_body_size"
-            || it->first == "error_page_403" || it->first == "error_page_404"
-            || it->first == "server_name" || it->first == "root") {
+            || it->first.find("error_page_") != string::npos
+                || it->first == "server_name" || it->first == "root") {
             it++;
             tmp = it;
             it--;
@@ -266,14 +270,7 @@ int Webserver::data_value_duplicate(config_t server_data)
                     tmp++;
                 }
             }
-            if (it->first == "error_page_403") {
-                while (tmp != server_data.end()) {
-                    if (it->first == tmp->first)
-                        return 1;
-                    tmp++;
-                }
-            }
-            if (it->first == "error_page_404") {
+            if (it->first.find("error_page_") != string::npos) {
                 while (tmp != server_data.end()) {
                     if (it->first == tmp->first)
                         return 1;
@@ -292,14 +289,38 @@ int Webserver::data_value_duplicate(config_t server_data)
     return 0;
 }
 
-void Webserver::duplicate_server_name(config_t next, config_t prev)
+void Webserver::duplicate_server_name(config_t prev, config_t next, string type)
 {
-    for(config_it it_next = next.begin(); it_next != next.end(); it_next++)
-        if (it_next->first == "server_name")
-            for(config_it it_prev = prev.begin(); it_prev != prev.end(); it_prev++)
-                if (it_next->second == it_prev->second) {
+    config_t tmp;
+    // if (prev.find("server_name")->second == next.find("server_name")->second && next.find("server_name")->second != ""){
+    //     cerr << "Duplicate server_name -> " << "\"" << prev.find("server_name")->second << "\"" << endl;
+    //     throw Webserver::server_data_error();
+    // }
+
+    // if (prev.find("host")->second == next.find("host")->second)
+    //     if (prev.find("listen")->second == next.find("listen")->second)
+    //         if (prev.find("server_name")->second == next.find("server_name")->second){
+    //             cerr << "Duplicate server_name -> " << "\"" << prev.find("server_name")->second << "\"" << endl;
+    //             throw Webserver::server_data_error();
+    //         }
+    tmp = prev;
+    for (config_t::iterator it = next.begin(); it != next.end(); it++)
+        tmp.insert(make_pair(it->first, it->second));
+    pair <config_t::iterator, config_t::iterator> ret;
+    ret = tmp.equal_range(type);
+    for (config_t::iterator it = ret.first; it != ret.second; it++){
+        config_t::iterator itx = ++it; --it;
+        for (; itx != ret.second; itx++){
+            if(it->second == itx->second && type == "listen")
+                duplicate_server_name(prev, next, "host");
+            if(it->second == itx->second && type == "host")
+                duplicate_server_name(prev, next, "server_name");
+            if(it->second == itx->second && type == "server_name"){
+                    cerr << "Duplicate server_name -> " << "\"" << prev.find("server_name")->second << "\"" << endl;
                     throw Webserver::server_data_error();
-                }
+            }
+        }
+    }
 }
 
 void Webserver::error_parsing(config_t server_data, locations_t locations)
