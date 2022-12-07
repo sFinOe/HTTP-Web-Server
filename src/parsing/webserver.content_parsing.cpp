@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.content_parsing.cpp                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:28:36 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/03 12:47:38 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/07 23:27:01 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ map<string, map<string, string> > Webserver::parse_locations(string& line, locat
             data.clear();
             // here i where i get the path of location ===> location '/image' so i can create map of maps for each path !!!
             // regex d zob
+            regfree(&regex);
             regcomp(&regex, "[location]+.*\\{", REG_EXTENDED);
             ret = regexec(&regex, tmp.c_str(), 1, &index, 0);
             if (ret == 0) {

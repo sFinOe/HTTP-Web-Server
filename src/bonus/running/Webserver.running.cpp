@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:26:25 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/07 13:42:32 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/07 23:23:04 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void Webserver::run(vector<Webserver> servers)
         pollfd fd;
         fd.fd = *it;
         fcntl(fd.fd, F_SETFL, O_NONBLOCK);
-        fd.events = POLLIN | POLLOUT;
+        fd.events = POLLIN | POLLOUT | POLLHUP;
         fds.push_back(fd);
         clients.push_back(client);
     }
@@ -88,6 +88,14 @@ void Webserver::run(vector<Webserver> servers)
         {
             if (fds[i].revents & POLLIN && (int)i < num_servers) {
                 _accept(clients, fds, i);
+            }
+            if ((fds[i].revents & POLLHUP) && (int)i >= num_servers){
+                close(fds[i].fd);
+                fds.erase(fds.begin() + i);
+			    delete clients[i].req;
+                clients.erase(clients.begin() + i);
+                i--;
+                continue;
             }
             if (fds[i].revents & POLLIN && (int)i >= num_servers) {
                 if(socket_I(clients, fds, &i))

@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 16:01:21 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/07 17:47:46 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/07 23:22:02 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,11 @@ void Webserver::socket_O(vector<t_client> &clients, vector<pollfd> &fds, size_t 
             clients[*i].bytesleft -= clients[*i].send_n;
          }
          if (clients[*i].total == clients[*i].res_buffer_len){
-    		clients[*i].done_header = false;
-    		clients[*i].length_type = false;
-    		clients[*i].done_body = false;
-    		clients[*i].chunked_type = false;
-    		clients[*i].done_length = false;
-    		clients[*i].request_done = false;
-			clients[*i].bytesleft = 0;
-			clients[*i].total = 0;
-			clients[*i].res_buffer_len = 0;
-			clients[*i].res_buffer.clear();
-			clients[*i].req_buffer.clear();
-			clients[*i].send_n = 0;
-    		clients[*i].error = false;
+            close(fds[*i].fd);
+            fds.erase(fds.begin() + *i);
 			delete clients[*i].req;
-    		clients[*i].req = new req_t();
+            clients.erase(clients.begin() + *i);
+            *i -= 1;
 		 }
     }
 }
