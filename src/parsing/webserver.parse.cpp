@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:05:53 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/11/25 21:07:26 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/06 15:59:08 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,9 +77,9 @@ vector<Webserver> Webserver::parse(char* path)
         server_data.clear();
         mime_types.clear();
     }
-    // if (servers.empty()) {
-    //     cerr << "error : empty server" << endl, throw Webserver::parsingerror();
-    // }
+    if (servers.empty()) {
+        cerr << "error : empty server" << endl, throw Webserver::parsingerror();
+    }
     // here where im gonna check for error if (good) return else exit(with error type) love
     for (servers_it srv_it = servers.begin(); srv_it != servers.end(); srv_it++)
     {

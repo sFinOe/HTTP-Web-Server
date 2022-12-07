@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.err_parsing.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:09:25 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/11/25 18:08:16 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/07 02:55:08 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,28 +30,30 @@ int Webserver::duplicate_location_data(string path, mime_t location)
 int key_comp(string key)
 {
     // check for undifend key anything other sting names[6] is error
-    string names[13] = {"client_max_body_size", "error_page_400", "error_page_403",
+    string names[16] = {"client_max_body_size", "error_page_400", "error_page_403",
                        "error_page_404", "error_page_405", "error_page_413", "error_page_500",
-                       "host", "listen", "server_name", "include", "root"};
+                       "host", "listen", "server_name", "include", "root", "page_200_delete",
+                        "page_201_created", "page_204_no_content", "page_200_ok"};
 
     if (key.empty())
         return 1;
-    for (int i = 0; i < 13; i++) {
+    for (int i = 0; i < 16; i++) {
         if (names[i] == key)
             return 0;
     }
     return 1;
 }
 
-int Webserver::value_comp(string key, string value)
+int Webserver::value_comp(string key, string &value)
 {
     // here where i check values of server data exmple ==> listen > 0 || listen < 65655
     long total;
     fstream exists;
     DIR *dir;
-    string names[12] = {"client_max_body_size", "error_page_403",
+    string names[16] = {"client_max_body_size", "error_page_403",
     "error_page_404", "host", "listen", "server_name", "include", "root", "error_page_400",
-    "error_page_405", "error_page_413", "error_page_500"};
+    "error_page_405", "error_page_413", "error_page_500", "page_200_delete",
+        "page_201_created", "page_204_no_content", "page_200_ok"};
 
     if (key != names[5])
         if (value.empty())
@@ -59,21 +61,25 @@ int Webserver::value_comp(string key, string value)
     // check client_max_body_size is num and bigger than 0
     if (names[0] == key) {
         total = atol(value.c_str());
-        if (num_check(value) || total < 0)
+        if (total < 0 || (value[value.length() - 1] != 'm')
+        || value.find(".") != string::npos)
             return 1;
     }
     // check error_page should be html and valid path
     if (names[1] == key || names[2] == key || names[8] == key
-        || names[9] == key || names[10] == key || names[11] == key) {
+        || names[9] == key || names[10] == key || names[11] == key
+        || names[12] == key || names[13] == key || names[14] == key
+            || names[15] == key) {
         exists.open(value.c_str(), fstream::in);
-        if (!exists || value.find(".html") == string::npos)
+        if (!exists || value.find(".html") == string::npos){
+            exists.close();
             return 1;
-        exists.close();
+        }
     }
     // check host value shouldnt be less than 0 and  class c ==> private ip
     if (names[3] == key) {
         if (value == "localhost")
-            value = "127.0.0.1";
+            value.assign("127.0.0.1");
         value.erase(remove(value.begin(), value.end(), '.'), value.end());
         if (num_check(value))
             return 1;
@@ -110,7 +116,6 @@ void Webserver::exit_error(config_t server_data, locations_t locations, string e
     locations.clear();
     server_data.clear();
 
-    // (void)exit_type;
     if (exit_type == KEY_ERR){
         cerr << "undefined key -> "
              << "\"" << err_str << "\"" << endl;
@@ -163,12 +168,11 @@ void Webserver::exit_error(config_t server_data, locations_t locations, string e
 int location_key_comp(string key)
 {
     // here i check data of location {listen....} anything else then names[6] is error
-    fstream exists;
-    string names[6] = {"root", "index", "allow",
-        "autoindex", "cgi_bin", "return_301"};
+    string names[9] = {"root", "index", "allow",
+        "autoindex", "cgi_bin", "return_301", "allow_upload", "type_cgi", "upload_at"};
     if (key.empty())
         return (1);
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 9; i++) {
         if (names[i] == key)
             return 0;
     }
@@ -188,24 +192,25 @@ int Webserver::location_value_comp_2(string key, string value, string *names)
         for (vector<string>::iterator it = methods.begin(); it != methods.end(); it++)
         {
             *it = trim(*it, " \t\v\f");
-            if (*it != "GET" && *it != "POST" && *it != "DELETE")
+            if (*it != "GET" && *it != "POST" && *it != "DELETE"){
+                methods.clear();
                 return 1;
+            }
         }
         methods.clear();
     }
     // check autoindex only on and off else error
-    if (names[3] == key) {
+    if (names[3] == key || names[6] == key) {
         if (value != "on" && value != "off")
             return 1;
     }
     // check cgi valid executable and valid path
     if (names[4] == key) {
         exists.open(value.c_str(), fstream::in);
-        if (!exists || (value.find("php-cgi") == string::npos
-            && value.find("cgi-fcgi") == string::npos && value.find("python2") == string::npos
-                && value.find("python3") == string::npos))
+        if (!exists || ((value.find("node") == string::npos) && (value.find("python") == string::npos))){
+            exists.close();
             return 1;
-        exists.close();
+        }
     }
     // check redirect value if valid else error
     if (names[5] == key) {
@@ -215,38 +220,42 @@ int Webserver::location_value_comp_2(string key, string value, string *names)
                 return 1;
         }
     }
+    if (names[7] == key){
+        if (value.find("js") == string::npos && value.find("py") == string::npos)
+            return 1;
+    }
     return 0;
 }
 
 int Webserver::location_value_comp(string key, string value, locations_it path)
 {
     // here i check values of location root index.......
-    fstream exists;
     DIR *dir;
-    map_str_it locs;
     string access;
-    string names[6] = {"root", "index", "allow",
-        "autoindex", "cgi_bin", "return_301"};
+    string names[9] = {"root", "index", "allow",
+        "autoindex", "cgi_bin", "return_301", "allow_upload", "type_cgi", "upload_at"};
     if (value.empty())
         return 1;
     // check root if valid
-    if (names[0] == key) {
+    if (names[0] == key || names[8] == key) {
+        if (names[0] == key){
         access = value + path->first;
         dir = opendir(access.c_str());
         if (!dir)
             return 1;
         closedir(dir);
+        }
+        else{
+            dir = opendir(value.c_str());
+            if (!dir)
+                return 1;
+            closedir(dir);
+        }
     }
     // check index if valid
     if (names[1] == key) {
-        for (locs = path->second.begin(); locs != path->second.end(); locs++)
-            if (locs->first == "root")
-                break;
-        access = locs->second + path->first + "/" + value;
-        exists.open(access.c_str(), fstream::in);
-        if (!exists || value.find(".html") == string::npos)
+        if (value.find(".html") == string::npos)
             return 1;
-        exists.close();
     }
     return (location_value_comp_2(key, value, names));
 }
@@ -292,17 +301,6 @@ int Webserver::data_value_duplicate(config_t server_data)
 void Webserver::duplicate_server_name(config_t prev, config_t next, string type)
 {
     config_t tmp;
-    // if (prev.find("server_name")->second == next.find("server_name")->second && next.find("server_name")->second != ""){
-    //     cerr << "Duplicate server_name -> " << "\"" << prev.find("server_name")->second << "\"" << endl;
-    //     throw Webserver::server_data_error();
-    // }
-
-    // if (prev.find("host")->second == next.find("host")->second)
-    //     if (prev.find("listen")->second == next.find("listen")->second)
-    //         if (prev.find("server_name")->second == next.find("server_name")->second){
-    //             cerr << "Duplicate server_name -> " << "\"" << prev.find("server_name")->second << "\"" << endl;
-    //             throw Webserver::server_data_error();
-    //         }
     tmp = prev;
     for (config_t::iterator it = next.begin(); it != next.end(); it++)
         tmp.insert(make_pair(it->first, it->second));

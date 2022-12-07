@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver.content_parsing.cpp                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:28:36 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/11/25 18:52:19 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/03 12:47:38 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 void Webserver::initialize_block(locations_t& _locations, config_t& _server_data)
 {
+    map_strings locs;
     for (config_it data_it = _server_data.begin(); data_it != _server_data.end(); data_it++) {
         if (data_it->first == "root") {
             for (locations_it locs_it = _locations.begin(); locs_it != _locations.end(); locs_it++) {
@@ -26,24 +27,46 @@ void Webserver::initialize_block(locations_t& _locations, config_t& _server_data
             }
         }
     }
+    for(locations_t::iterator maps = _locations.begin(); maps != _locations.end(); maps++){
+        locs = maps->second;
+        if (locs.find("allow") == locs.end())
+            locs.insert(make_pair("allow", "GET, POST, DELETE"));
+        if (locs.find("index") == locs.end())
+            locs.insert(make_pair("index", "index.html"));
+        if (locs.find("autoindex") == locs.end())
+            locs.insert(make_pair("autoindex", "on"));
+        if (locs.find("allow_upload") == locs.end())
+            locs.insert(make_pair("allow_upload", "off"));
+        if (locs.find("upload_at") == locs.end())
+            locs.insert(make_pair("upload_at", locs["root"] + "/" + maps->first));
+        maps->second = locs;
+    }
     if (_server_data.find("error_page_400") == _server_data.end())
-        _server_data.insert(make_pair("error_page_400", "/home/tankb0y/Desktop/errors/error_400.html"));
+        _server_data.insert(make_pair("error_page_400", "/home/tankb0y/Desktop/html_pages/error_400.html"));
     if (_server_data.find("error_page_403") == _server_data.end())
-        _server_data.insert(make_pair("error_page_403", "/home/tankb0y/Desktop/errors/error_403.html"));
+        _server_data.insert(make_pair("error_page_403", "/home/tankb0y/Desktop/html_pages/error_403.html"));
     if (_server_data.find("error_page_404") == _server_data.end())
-        _server_data.insert(make_pair("error_page_404", "/home/tankb0y/Desktop/errors/error_404.html"));
+        _server_data.insert(make_pair("error_page_404", "/home/tankb0y/Desktop/html_pages/error_404.html"));
     if (_server_data.find("error_page_405") == _server_data.end())
-        _server_data.insert(make_pair("error_page_405", "/home/tankb0y/Desktop/errors/error_405.html"));
+        _server_data.insert(make_pair("error_page_405", "/home/tankb0y/Desktop/html_pages/error_405.html"));
     if (_server_data.find("error_page_413") == _server_data.end())
-        _server_data.insert(make_pair("error_page_413", "/home/tankb0y/Desktop/errors/error_413.html"));
+        _server_data.insert(make_pair("error_page_413", "/home/tankb0y/Desktop/html_pages/error_413.html"));
     if (_server_data.find("error_page_500") == _server_data.end())
-        _server_data.insert(make_pair("error_page_500", "/home/tankb0y/Desktop/errors/error_500.html"));
+        _server_data.insert(make_pair("error_page_500", "/home/tankb0y/Desktop/html_pages/error_500.html"));
+    if (_server_data.find("page_200_delete") == _server_data.end())
+        _server_data.insert(make_pair("page_200_delete", "/home/tankb0y/Desktop/html_pages/delete_200.html"));
+    if (_server_data.find("page_201_created") == _server_data.end())
+        _server_data.insert(make_pair("page_201_created", "/home/tankb0y/Desktop/html_pages/created_201.html")); 
+    if (_server_data.find("page_204_no_content") == _server_data.end())
+        _server_data.insert(make_pair("page_204_no_content", "/home/tankb0y/Desktop/html_pages/no_content_204.html")); 
+    if (_server_data.find("page_200_ok") == _server_data.end())
+        _server_data.insert(make_pair("page_200_ok", "/home/tankb0y/Desktop/html_pages/200_ok.html")); 
     if (_server_data.find("include") == _server_data.end())
         _server_data.insert(make_pair("include", "config/mime.types"));
     if (_server_data.find("server_name") == _server_data.end())
         _server_data.insert(make_pair("server_name", ""));
     if (_server_data.find("client_max_body_size") == _server_data.end())
-        _server_data.insert(make_pair("client_max_body_size", "1024"));
+        _server_data.insert(make_pair("client_max_body_size", "10m"));
 
 }
 

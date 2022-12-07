@@ -43,7 +43,7 @@ void ft_parse_tests_suite() {
 		/************ Fill test location map of maps **************/
 
 		fill.insert(make_pair("root", "/home/tankb0y/Desktop/public_html"));
-		fill.insert(make_pair("allow", "[POST,DELETE, GET]"));
+		fill.insert(make_pair("allow", "[GET,]"));
 		test_l.insert(make_pair("/upload", fill));
 		fill.clear();
 		
