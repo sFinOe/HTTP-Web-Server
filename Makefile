@@ -8,13 +8,15 @@ BONUS = webserv_bonus
 CC = c++ -std=c++11
 CXXFLAGS= -Wall -Wextra -Werror -std=c++11 -g
 RM = rm -rf
-INCLUDE = ./includes/webserver.hpp ./includes/common.hpp
-INCLUDE_BONUS = ./includes/webserver_bonus.hpp ./includes/common_bonus.hpp
-INCLUDES = -I./includes/ -I./tests/
-TEST_INCLUDES = -I./includes/ -I./tests/
+INCLUDE = ./mandatory/includes/webserver.hpp ./mandatory/includes/common.hpp
+INCLUDE_BONUS = ./bonus/includes/webserver_bonus.hpp ./bonus/includes/common_bonus.hpp
+INCLUDES = -I./mandatory/includes/ -I./tests/
+TEST_INCLUDES = -I./mandatory/includes/ -I./tests/
 #wildcard in src/
-SRCS = $(wildcard src/parsing/*.cpp src/mandatory/*.cpp src/mandatory/running/*.cpp src/mandatory/running/request/*.cpp src/mandatory/running/response/*.cpp src/mandatory/running/cgi/*.cpp)
-SRCS_BONUS = $(wildcard src/parsing/*.cpp src/bonus/*.cpp src/bonus/running/*.cpp src/bonus/running/request/*.cpp src/bonus/running/response/*.cpp src/bonus/running/cgi/*.cpp)
+SRCS = $(wildcard ./mandatory/parsing/*.cpp ./mandatory/*.cpp ./mandatory/running/*.cpp ./mandatory/running/request/*.cpp ./mandatory/running/response/*.cpp ./mandatory/running/cgi/*.cpp)
+
+
+SRCS_BONUS = $(wildcard ./bonus/parsing/*.cpp ./bonus/*.cpp ./bonus/running/*.cpp ./bonus/running/request/*.cpp ./bonus/running/response/*.cpp ./bonus/running/cgi/*.cpp)
 
 
 # test srcs include all srcs except main.cpp
@@ -28,27 +30,27 @@ OBJS = $(addprefix $(PREFIX), $(SRCS:.cpp=.o))
 OBJS_BONUS = $(addprefix $(PREFIX), $(SRCS_BONUS:.cpp=.o))
 
 all: $(NAME)
-bonus: $(NAME) $(BONUS)
+bonus: $(BONUS)
 
 $(PREFIX) :
 	@mkdir -p $(PREFIX)
-	@mkdir -p $(PREFIX)/src
-	@mkdir -p $(PREFIX)/src/parsing
-	@mkdir -p $(PREFIX)/src/mandatory/running
-	@mkdir -p $(PREFIX)/src/mandatory/running/request
-	@mkdir -p $(PREFIX)/src/mandatory/running/response
-	@mkdir -p $(PREFIX)/src/mandatory/running/cgi
-	@mkdir -p $(PREFIX)/src/bonus/running
-	@mkdir -p $(PREFIX)/src/bonus/running/request
-	@mkdir -p $(PREFIX)/src/bonus/running/response
-	@mkdir -p $(PREFIX)/src/bonus/running/cgi
+	@mkdir -p $(PREFIX)/mandatory/parsing
+	@mkdir -p $(PREFIX)/mandatory/running
+	@mkdir -p $(PREFIX)/mandatory/running/request
+	@mkdir -p $(PREFIX)/mandatory/running/response
+	@mkdir -p $(PREFIX)/mandatory/running/cgi
+	@mkdir -p $(PREFIX)/bonus/parsing
+	@mkdir -p $(PREFIX)/bonus/running
+	@mkdir -p $(PREFIX)/bonus/running/request
+	@mkdir -p $(PREFIX)/bonus/running/response
+	@mkdir -p $(PREFIX)/bonus/running/cgi
 
 $(NAME): $(PREFIX) $(OBJS) $(INCLUDE)
 	@$(CC) $(CXXFLAGS) $(INCLUDES) $(OBJS) -o $(NAME)
 	@printf "\033[2K\r\033[0;32;1mTo Compile => ./webserv [/config/default.conf]\n\033[0m"
 
 $(BONUS): $(PREFIX) $(OBJS_BONUS) $(INCLUDE_BONUS)
-	@$(CC) $(CXXFLAGS) $(INCLUDES) $(OBJS_BONUS) -o $(BONUS)
+	@$(CC) $(CXXFLAGS) $(OBJS_BONUS) -o $(BONUS)
 	@printf "\033[2K\r\033[0;32;1mTo Compile => ./webserv_bonus [/config/default.conf]\n\033[0m"
 
 $(PREFIX)%.o: %.cpp $(INCLUDE) $(INCLUDE_BONUS)
@@ -68,6 +70,8 @@ fclean: clean
 	@printf "\033[2K\r\033[0;32mFile Cleaned!\033[0m"
 
 re: fclean all
+
+re_bonus: fclean bonus
 
 .PHONY: all clean fclean re
 
