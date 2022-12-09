@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Webserver.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 14:16:41 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/02 17:37:22 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/09 13:27:22 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/common.hpp"
-#include "../includes/webserver.hpp"
+#include <common.hpp>
+#include <webserver.hpp>
 
 // defining the static variable
 set<int> Webserver::_sockets;
