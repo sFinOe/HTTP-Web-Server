@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Signup</title>
 </head>
 
 <body>
@@ -193,7 +193,7 @@
     <form autocomplete='off' class='form'>
         <div class='control'>
             <h1>
-                Sign In
+                Sign up
             </h1>
         </div>
         <div class='control block-cube block-input'>
@@ -231,50 +231,55 @@
                 <div class='bg-inner'></div>
             </div>
             <div class='text'>
-                Log In
+                Create account
             </div>
         </button>
     </form>
 
 
     <script>
-        const btn = document.querySelector('.btn');
-        const inputs = document.querySelectorAll('.control input');
 
+        // until the page is loaded
         window.addEventListener('load', () => {
             // get the button and form
             const btn = document.querySelector('.btn');
             const form = document.querySelector('.form');
             const inputs = document.querySelectorAll('.block-input input');
 
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
                 console.log('clicked')
                 // get email and password
                 const email = inputs[0].value;
                 const password = inputs[1].value;
-                let formData = new FormData();
 
+                // send a post request to the server using fetch api using form data 
+
+                let formData = new FormData();
                 formData.append('email', email);
                 formData.append('password', password);
+
                 if (email && password) {
-                    const data = await get_data("/login", formData);
-                    if (data.status == 401) {
-                        alert('Invalid Credentials');
-                    }
-                    else if (data.status === 200) {
-                        window.location.href = '/game';
-                    }
+                    console.log(formData)
+                    fetch('/signup', {
+                        method: 'POST',
+                        body: formData
+                    }).then(
+                        res => {
+                            if (res.ok) {
+                                alert('Account created successfully');
+                                window.location.href = '/login';
+                            }
+                            else if (res.status == 409) {
+                                alert("Email already exists");
+                            }
+                        }
+
+                    ).catch(err => {
+                        console.log(err);
+                    });
                 }
             });
         });
-        async function get_data(url, data) {
-            const res = await fetch(url, {
-                method: 'POST',
-                body: data
-            });
-            return res;
-        }
-
     </script>
 </body>
 

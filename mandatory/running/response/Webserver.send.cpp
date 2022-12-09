@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserver.send.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:31:27 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/06 15:02:47 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 13:18:57 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,22 @@ string Webserver::_count_content_length(string root)
 	return "Content-Length: " + len.str() + "\r\n";
 }
 
-// int Webserver::_send(int socket, const char *buf, size_t len)
-// {
-//     size_t total = 0;
-//     int bytesleft = len;
-//     int n;
-//     while(total < len) {
-//         n = send(socket, buf + total, bytesleft, 0);
-//         if (n == -1){
-// 			cout << "-1 " << endl;
-//             return 0;
-// 		}
-// 		total += n;
-//         bytesleft -= n;
-//     }
-//     return n == -1 ? -1 : 0;
-// }
+int Webserver::_send(int socket, const char *buf, size_t len)
+{
+    size_t total = 0;
+    int bytesleft = len;
+    int n;
+    while(total < len) {
+        n = send(socket, buf + total, bytesleft, 0);
+        if (n == -1){
+			cout << "-1 " << endl;
+            return 0;
+		}
+		total += n;
+        bytesleft -= n;
+    }
+    return n == -1 ? -1 : 0;
+}
 
 
 h_response    *Webserver::_status_line(int code_type)

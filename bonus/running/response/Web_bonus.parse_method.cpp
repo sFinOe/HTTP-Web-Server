@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserver_bonus.parse_method.cpp                   :+:      :+:    :+:   */
+/*   Web_bonus.parse_method.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:09:57 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 19:38:40 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 13:23:34 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,7 @@ h_request* Webserver::_make_request(req_t* req)
 void Webserver::_initialize_response(vector<t_client> &clients, vector<pollfd> &fds, size_t i, vector<Webserver> &servers)
 {
     if (clients[i].request_done) { // done request reading
-		free_client();
-		
+		// free_client();	
 		if (valid_path(clients[i].req->status_line, fds[i])){}
 		else if (!clients[i].err_type.empty()){
 			_response = request_error(&clients[i]);

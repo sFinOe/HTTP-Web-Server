@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserver.utils.cpp                                :+:      :+:    :+:   */
+/*   Web_bonus.utils.cpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 16:26:51 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/08 16:44:13 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 13:19:21 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,13 @@ void Webserver::replace_all(string& s, string const& toReplace, string const& re
 
     buf.append(s, prevPos, s.size() - prevPos);
     s.swap(buf);
+}
+
+long long Webserver::_to_num(const string& str) const {
+    long long num = 0;
+    for (size_t i = 0; i < str.size(); i++) {
+        num *= 10;
+        num += str[i] - '0';
+    }
+    return num;
 }

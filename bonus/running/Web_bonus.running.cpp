@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserver_bonus.running.cpp                        :+:      :+:    :+:   */
+/*   Web_bonus.running.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:26:25 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/08 20:13:06 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 13:15:34 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,21 +89,34 @@ void Webserver::run(vector<Webserver> servers)
             if (fds[i].revents & POLLIN && (int)i < num_servers) {
                 _accept(clients, fds, i);
             }
-            if ((fds[i].revents & POLLHUP) && (int)i >= num_servers){
+            if ((fds[i].revents & POLLHUP) && (int)i >= num_servers) {
                 close(fds[i].fd);
                 fds.erase(fds.begin() + i);
-			    delete clients[i].req;
+                delete clients[i].req;
                 clients.erase(clients.begin() + i);
                 i--;
                 continue;
             }
             if (fds[i].revents & POLLIN && (int)i >= num_servers) {
-                if(socket_I(clients, fds, &i))
+                if (socket_I(clients, fds, &i))
                     continue;
                 _initialize_response(clients, fds, i, servers);
             }
-            if (fds[i].revents & POLLOUT && (int)i >= num_servers){
+            if (fds[i].revents & POLLOUT && (int)i >= num_servers) {
+                string method = clients[i].req->status_line.substr(0, clients[i].req->status_line.find(" "));
+                string path = clients[i].req->status_line.substr(clients[i].req->status_line.find(" ") + 1);
+                path = path.substr(0, path.find(" "));
+                if (path == "/game/") {
+                    cout << "game" << endl;
+                    if (!_valid_session(clients[i].req->headers, servers))
+                        _handle_invalid_session(clients[i].fd);
+                }
+                else if (method == "POST") {
+                    if (_cookie_path(clients[i].req->status_line))
+                        _cookies(clients, i, servers);
+                }
                 socket_O(clients, fds, &i);
+
             }
         }
     }

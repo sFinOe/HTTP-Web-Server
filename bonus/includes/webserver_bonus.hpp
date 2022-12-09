@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_bonus.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:06 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/08 16:40:20 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 13:14:28 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef WEBSERVER_BONUS_HPP
-# define WEBSERVER_BONUS_HPP
+#ifndef WEBSERVER_HPP
+# define WEBSERVER_HPP
 
-#include "./common_bonus.hpp"
 
+#include "common_bonus.hpp"
 
 // change to response_h struct for checking status code
 
@@ -169,9 +169,9 @@ typedef struct {
 	size_t bytesleft;
 	int send_n;
 	size_t total;
-	
+
 	//////////// request data /////////////
-	
+
 	string	req_buffer;
 	ssize_t 	content_length;
 	size_t  header_length;
@@ -184,15 +184,54 @@ typedef struct {
 	bool 	done_length;
 	bool 	request_done;
 	req_t* req;
-	
+
 	//////////// error data /////////////
-	
+
 	bool	error;
 	string err_type;
 
-	
+
 
 } t_client;
+
+
+// user stuff
+typedef struct user {
+	string email;
+	string password;
+	string exp_date;
+	// constructor
+
+	// default 
+	user() {
+		this->email = "";
+		this->password = "";
+	}
+	// custom
+	user(string email, string password) {
+		this->email = email;
+		this->password = password;
+	}
+
+} user;
+
+
+
+// typedef struct session {
+// 	string session_id;
+// 	string session_expr;
+// 	// default
+// 	session() {
+// 		this->session_id = "";
+// 		this->session_expr = "";
+// 	}
+// 	// custom
+// 	session(string session_id, string session_expr) {
+// 		this->session_id = session_id;
+// 		this->session_expr = session_expr;
+// 	}
+// } session;
+
 
 class Webserver {
 
@@ -200,19 +239,19 @@ public:
 
 	/*********** Parsing exception ***************/
 
-	class parsingerror : public std::exception {
+	class parsingerror: public std::exception {
 		virtual const char* what() const throw() {
 			return "\033[1;31mConfig error : server syntax error\033[0m";
 		}
 	};
 
-	class location_error : public std::exception {
+	class location_error: public std::exception {
 		virtual const char* what() const throw() {
 			return "\033[1;31mConfig error : location syntax error\033[0m";
 		}
 	};
 
-	class server_data_error : public std::exception {
+	class server_data_error: public std::exception {
 		virtual const char* what() const throw() {
 			return "\033[1;31mConfig error : server data syntax error\033[0m";
 		}
@@ -221,44 +260,44 @@ public:
 
 	/*********** server exception ***************/
 
-	class PollException : public std::exception {
+	class PollException: public std::exception {
 		virtual const char* what() const throw() {
 			return "poll() failed";
 		}
 	};
 
-	class AcceptException : public std::exception {
+	class AcceptException: public std::exception {
 		virtual const char* what() const throw() {
 			return "accept() failed";
 		}
 	};
 
-	class ListenException : public std::exception {
+	class ListenException: public std::exception {
 		virtual const char* what() const throw() {
 			return "listen() failed";
 		}
 	};
 
-	class BindException : public std::exception {
+	class BindException: public std::exception {
 		virtual const char* what() const throw() {
 			return "bind() failed";
 		}
 	};
 
-	class SocketException : public std::exception {
+	class SocketException: public std::exception {
 		virtual const char* what() const throw() {
 			return "socket() failed";
 		}
 	};
 
-	class InvalidHostException : public std::exception {
+	class InvalidHostException: public std::exception {
 		virtual const char* what() const throw() {
 			return "Invalid host";
 		}
 	};
 
 
-	class RecvException : public std::exception {
+	class RecvException: public std::exception {
 		virtual const char* what() const throw() {
 			return "recv() failed";
 		}
@@ -313,10 +352,12 @@ private:
 	// cgi_
 	mime_t _mime_types;
 	static set<int> _sockets;
-	// res_t* _res;
+
 	h_response* _response;
 	h_request* _request;
-	// res_t* _response;
+	map<string, user> _users;
+
+
 	/**************** private member types *****************/
 	typedef vector<string> v_str_t;
 	typedef vector<string>::iterator v_str_it;
@@ -345,27 +386,27 @@ private:
 	static int location_value_comp_2(string key, string value, string* names);
 	static int duplicate_location_data(string path, mime_t location);
 	static int data_value_duplicate(config_t server_data);
-	static int value_comp(string key, string &value);
+	static int value_comp(string key, string& value);
 	static void    initialize_block(locations_t& _locations, config_t& _server_data);
 
 	/*******************************************************************/
 
 	// Request parsing functions
-	bool socket_I(vector<t_client> &clients, vector<pollfd> &fds, size_t *i);
-	bool parse_header(vector<t_client> &clients, vector<pollfd> &fds, size_t *i);
-	bool parse_content_length(vector<t_client> &clients, vector<pollfd> &fds, size_t *i);
-	bool parse_transfer_encoding(vector<t_client> &clients, vector<pollfd> &fds, size_t *i);
-	
+	bool socket_I(vector<t_client>& clients, vector<pollfd>& fds, size_t* i);
+	bool parse_header(vector<t_client>& clients, vector<pollfd>& fds, size_t* i);
+	bool parse_content_length(vector<t_client>& clients, vector<pollfd>& fds, size_t* i);
+	bool parse_transfer_encoding(vector<t_client>& clients, vector<pollfd>& fds, size_t* i);
+
 	// Response parsing functions
-	void _initialize_response(vector<t_client> &clients, vector<pollfd> &fds, size_t i, vector<Webserver> &servers);
-	void socket_O(vector<t_client> &clients, vector<pollfd> &fds, size_t *i);
-	
+	void _initialize_response(vector<t_client>& clients, vector<pollfd>& fds, size_t i, vector<Webserver>& servers);
+	void socket_O(vector<t_client>& clients, vector<pollfd>& fds, size_t* i);
+
 	// accept
-	void _accept(vector<t_client> &clients, vector<pollfd> &fds, size_t i);
+	void _accept(vector<t_client>& clients, vector<pollfd>& fds, size_t i);
 
 	// free
 	void free_client();
-	
+
 	// errors
 	bool   _is_err_code(const string& err_code);
 	void _error(int errono);
@@ -380,13 +421,13 @@ private:
 	string multimap_value(multimap<string, string> data, string key);
 	int error_page(string path);
 	void check_query(string& str, get_parse* g_parse);
-	void _parse_header(get_parse *g_parse, req_t* req);
-	bool _find_location(get_parse *g_parse, v_servers::iterator &server_it, map_strings &locs, string &root);
-	void _initialize_auto_index(get_parse *g_parse, map_strings &locs, string &root);
+	void _parse_header(get_parse* g_parse, req_t* req);
+	bool _find_location(get_parse* g_parse, v_servers::iterator& server_it, map_strings& locs, string& root);
+	void _initialize_auto_index(get_parse* g_parse, map_strings& locs, string& root);
 
-	
+
 	// get response Error method
-	void _response_error(get_parse *g_parse, string &root, v_servers::iterator &server_it, map_strings &locs);
+	void _response_error(get_parse* g_parse, string& root, v_servers::iterator& server_it, map_strings& locs);
 
 
 	// POST // method parsing
@@ -400,14 +441,14 @@ private:
 	void _upload_data(string root, post_parse* p_parse);
 	bool _entity_too_large(config server_data, post_parse* p_parse);
 	void check_query(string& str, post_parse* p_parse);
-	void _parse_header(post_parse *p_parse, req_t* req);
-	bool _find_location(post_parse *p_parse, v_servers::iterator &server_it, map_strings &locs, string &root);
-	
+	void _parse_header(post_parse* p_parse, req_t* req);
+	bool _find_location(post_parse* p_parse, v_servers::iterator& server_it, map_strings& locs, string& root);
+
 	// post response Error method
-	
-	void _response_error(post_parse *p_parse, string &root, v_servers::iterator &server_it);
-	
-	
+
+	void _response_error(post_parse* p_parse, string& root, v_servers::iterator& server_it);
+
+
 
 
 	// DELETE // method parsing
@@ -416,18 +457,18 @@ private:
 	vector<Webserver>::iterator target_server(delete_parse* d_parse, v_servers& servers);
 	void _proccess_delete_request(delete_parse* d_parse, v_servers& servers);
 	void check_query(string& str, delete_parse* d_parse);
-	void query_parsing(delete_parse *d_parse);
-	void _parse_header(delete_parse *d_parse, req_t* req);
-	bool _find_location(delete_parse *d_parse, v_servers::iterator &server_it, map_strings &locs, string &root);
-	
-	// delete response Error method
-	
-	void _response_error(delete_parse *d_parse, string &root, v_servers::iterator &server_it);
+	void query_parsing(delete_parse* d_parse);
+	void _parse_header(delete_parse* d_parse, req_t* req);
+	bool _find_location(delete_parse* d_parse, v_servers::iterator& server_it, map_strings& locs, string& root);
 
-	
+	// delete response Error method
+
+	void _response_error(delete_parse* d_parse, string& root, v_servers::iterator& server_it);
+
+
 	// server error response
-	h_response *request_error(t_client *client);
-	
+	h_response* request_error(t_client* client);
+
 
 	// GET CGI // method
 	bool _is_cgi(get_parse* g_parse, map_strings locs);
@@ -473,7 +514,8 @@ private:
 	string _to_string(long long num);
 	void replace_all(string& s, string const& toReplace, string const& replaceWith);
 	string fix_path(string str);
-	
+	long long _to_num(const string& str) const;
+
 	// getters
 	string _get_host() const;
 	Webserver* _get_server(const string& host, vector<Webserver>& servers);
@@ -481,6 +523,22 @@ private:
 	string _get_err_page(const string& path);
 
 
+	// sessions stuff
+	bool    _cookie_path(const string& str);
+	void _cookies(vector<t_client>& clients, size_t i, vector<Webserver>& servers);
+	// session management and cookies related stuff
+	bool _valid_login(const user& suspect, Webserver* server) const;
+	bool    _is_valid_session(string session_id, user& suspect, Webserver* server) const;
+	bool    _expired_id(const string& date) const;
+	bool 	_signup(const string& email, const string& password, Webserver* server);
+	const string _generate_id() const;
+	string  _get_expr_date();
+
+	pair<string, string> _get_credntials(const string& body);
+	string _get_session_id(const string& email, Webserver* server);
+	pair<string, string>    _get_cookie(const string& headers, Webserver* server);
+	bool    _valid_session(const string& headers, vector<Webserver>& servers);
+	void    _handle_invalid_session(int fd);
 };
 
 
