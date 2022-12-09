@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:40 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 13:51:07 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 18:13:01 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@
 
 /**************************************/
 
-int main(int argc, char** argv)
+int main(int argc, char** argv, char** env)
 {
 
   // obj webservs hold vector<webserver> servers!!!! constractor
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
   };
   vector<Webserver>::iterator it = websrvs.begin();
   for (; it != websrvs.end(); ++it) {
-    it->up();
+    it->up(env);
   }
   websrvs[0].run(websrvs);
 

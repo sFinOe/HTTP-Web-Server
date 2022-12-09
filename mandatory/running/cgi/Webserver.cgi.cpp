@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 13:12:48 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 18:45:31 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 18:46:50 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ bool Webserver::_handle_cgi(const string& path, const map<string, string>& loc, 
         fd = open("/tmp/output.txt", O_RDONLY | O_WRONLY | O_CREAT, 0666);
         dup2(fd, 1);
         // fclose(stdout);
-        if (execve(command.c_str(), argv, NULL) == -1) {
+        if (execve(command.c_str(), argv, envp) == -1) {
             _set_error_code("500", "Internal Server Error", "");
             return false;
         }
@@ -102,7 +102,7 @@ bool    Webserver::_handle_cgi(const string& path, const map<string, string>& lo
             return false;
         }
         dup2(fd_out, 1);
-        if (execve(command.c_str(), argv, NULL) == -1) {
+        if (execve(command.c_str(), argv, envp) == -1) {
             _set_error_code("500", "Internal Server Error", "");
             return false;
         }

@@ -6,15 +6,16 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:26:25 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 14:57:04 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 18:57:51 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <common.hpp>
 #include <webserver.hpp>
 
-void Webserver::up()
+void Webserver::up(char **env)
 {
+    envp = env;
     pair<config_t::const_iterator, config_t::const_iterator> range = _server_data.equal_range("listen");
     int sock;
     // start by assuming host is localhost
@@ -103,7 +104,6 @@ void Webserver::run(vector<Webserver> servers)
                 if(socket_I(clients, fds, &i))
                     continue;
                 _initialize_response(clients, fds, i, servers);
-                // cout << clients[i].req->headers << endl;
             }
             if ((fds[i].revents & POLLOUT) && (int)i >= num_servers){
                 socket_O(clients, fds, &i);

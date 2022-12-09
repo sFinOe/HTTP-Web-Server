@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:06 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/06 15:37:39 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 16:31:57 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -361,7 +361,7 @@ private:
 	void _accept(vector<t_client> &clients, vector<pollfd> &fds, size_t i);
 
 	// free
-	void free_client();
+	void add_garbage();
 	
 	// errors
 	bool   _is_err_code(const string& err_code);
@@ -458,9 +458,6 @@ private:
 	// valid_path
 	bool valid_path(string, pollfd client_fd);
 
-	// LOGIN DB
-	void	fill_login_db(vector<post_body> body);
-	bool	valid_login(string login);
 
 	// autoindex
 	string autoindex(get_parse* g_parse, map_strings locs);

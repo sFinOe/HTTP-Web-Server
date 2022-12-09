@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_bonus.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:06 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 13:14:28 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/09 18:05:46 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,6 +313,7 @@ public:
 
 	Webserver(config_t server_vals, locations_t location_vals, mime_t mime_types);
 	Webserver(vector<Webserver> servers);
+	~Webserver();
 
 	/************* Parsing public member functions ***************/
 
@@ -321,7 +322,7 @@ public:
 	/********************************************************/
 
 	// up create socket, bind it and start lisiting on the port
-	void up();
+	void up(char **env);
 	// actually launch the infinite loop to repsonde to clients requests
 
 	void run(vector<Webserver> servers);
@@ -356,6 +357,8 @@ private:
 	h_response* _response;
 	h_request* _request;
 	map<string, user> _users;
+	vector<void*> _free;
+	char **envp;
 
 
 	/**************** private member types *****************/
@@ -405,7 +408,7 @@ private:
 	void _accept(vector<t_client>& clients, vector<pollfd>& fds, size_t i);
 
 	// free
-	void free_client();
+	void add_garbage();
 
 	// errors
 	bool   _is_err_code(const string& err_code);
@@ -501,10 +504,6 @@ private:
 
 	// valid_path
 	bool valid_path(string, pollfd client_fd);
-
-	// LOGIN DB
-	void	fill_login_db(vector<post_body> body);
-	bool	valid_login(string login);
 
 	// autoindex
 	string autoindex(get_parse* g_parse, map_strings locs);

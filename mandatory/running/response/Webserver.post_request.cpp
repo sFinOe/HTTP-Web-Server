@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 01:07:38 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 14:14:08 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 19:06:48 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ bool Webserver::_find_location(post_parse *p_parse, v_servers::iterator &server_
 			}
 			
 	if (_is_cgi(p_parse, locs)) {
+		cout << "CGI" << endl;
 		if (!_handle_cgi(root, locs, p_parse)) {
 			p_parse->status = 500;
 			root = multimap_value(server_it->_server_data, "error_page_500");

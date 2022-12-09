@@ -3,7 +3,7 @@
 const args = process.argv;
 const text = args[2];
 
-const API_KEY = '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';
+const API_KEY = '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';
 const axios = require("axios");
 
 axios({

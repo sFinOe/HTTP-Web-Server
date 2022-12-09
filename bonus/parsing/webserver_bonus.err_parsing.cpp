@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:09:25 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 13:49:32 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 16:30:18 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ int Webserver::location_value_comp_2(string key, string value, string *names)
             return 1;
     }
     // check cgi valid executable and valid path
-    if (names[4] == key || names[10] == key) {
+    if (names[4] == key || names[9] == key) {
         exists.open(value.c_str(), fstream::in);
         if (!exists){
             if (key == "cgi_bin_py"){

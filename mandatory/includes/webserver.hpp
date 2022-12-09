@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:06 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/06 15:37:39 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 18:13:54 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -271,6 +271,7 @@ public:
 
 	Webserver(config_t server_vals, locations_t location_vals, mime_t mime_types);
 	Webserver(vector<Webserver> servers);
+	~Webserver();
 
 	/************* Parsing public member functions ***************/
 
@@ -279,7 +280,7 @@ public:
 	/********************************************************/
 
 	// up create socket, bind it and start lisiting on the port
-	void up();
+	void up(char **evp);
 	// actually launch the infinite loop to repsonde to clients requests
 
 	void run(vector<Webserver> servers);
@@ -310,10 +311,11 @@ private:
 	// cgi_
 	mime_t _mime_types;
 	static set<int> _sockets;
-	// res_t* _res;
 	h_response* _response;
 	h_request* _request;
-	// res_t* _response;
+	char **envp;
+	
+	vector<void *> _free;
 	/**************** private member types *****************/
 	typedef vector<string> v_str_t;
 	typedef vector<string>::iterator v_str_it;
@@ -361,7 +363,7 @@ private:
 	void _accept(vector<t_client> &clients, vector<pollfd> &fds, size_t i);
 
 	// free
-	void free_client();
+	void add_garbage();
 	
 	// errors
 	bool   _is_err_code(const string& err_code);
@@ -458,9 +460,6 @@ private:
 	// valid_path
 	bool valid_path(string, pollfd client_fd);
 
-	// LOGIN DB
-	void	fill_login_db(vector<post_body> body);
-	bool	valid_login(string login);
 
 	// autoindex
 	string autoindex(get_parse* g_parse, map_strings locs);

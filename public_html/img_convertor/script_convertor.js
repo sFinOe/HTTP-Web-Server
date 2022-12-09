@@ -1,8 +1,8 @@
 const upload_file = document.getElementById('choose_file');
 
 
-upload_file.addEventListener('change', function() {
-		
+upload_file.addEventListener('change', function(event) {
+	event.preventDefault();
 	const file = this.files[0];
 	if (!file.type.match('image.*')){
 		alert('Please select an image file');

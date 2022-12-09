@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:09:57 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 14:29:42 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 16:16:35 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ h_request* Webserver::_make_request(req_t* req)
 void Webserver::_initialize_response(vector<t_client> &clients, vector<pollfd> &fds, size_t i, vector<Webserver> &servers)
 {
     if (clients[i].request_done) { // done request reading
-		// free_client();	
+		// add_garbage();	
 		if (valid_path(clients[i].req->status_line, fds[i])){}
 		else if (!clients[i].err_type.empty()){
 			_response = request_error(&clients[i]);

@@ -3,18 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   Web_bonus.running.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:26:25 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 13:15:34 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/09 18:06:15 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/common_bonus.hpp"
 #include "../includes/webserver_bonus.hpp"
 
-void Webserver::up()
+void Webserver::up(char **env)
 {
+    this->envp = env;
     pair<config_t::const_iterator, config_t::const_iterator> range = _server_data.equal_range("listen");
     int sock;
     // start by assuming host is localhost

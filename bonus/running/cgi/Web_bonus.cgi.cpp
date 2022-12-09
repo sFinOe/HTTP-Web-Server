@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserver_bonus.cgi.cpp                            :+:      :+:    :+:   */
+/*   Web_bonus.cgi.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 13:12:48 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 19:23:21 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 18:14:49 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 bool    Webserver::_is_cgi(get_parse* g_parse, map_strings locs) {
     // getting the path of the request
     // if ther's no '.' in the path, it's not a cgi script
-    if (locs.find("type_cgi") != locs.end() && locs.find("cgi_bin") != locs.end()) {
+    if (locs.find("type_cgi") != locs.end() && (locs.find("cgi_bin_py") != locs.end()
+        || locs.find("cgi_bin_js") != locs.end())) {
         if (locs["type_cgi"] == g_parse->file_type)
             return true;
     }
@@ -27,9 +28,11 @@ bool    Webserver::_is_cgi(get_parse* g_parse, map_strings locs) {
 bool    Webserver::_is_cgi(post_parse* p_parse, map_strings locs) {
     // getting the path of the request
     // if ther's no '.' in the path, it's not a cgi script
-    if (locs.find("type_cgi") != locs.end() && locs.find("cgi_bin") != locs.end()) {
-        if (locs["type_cgi"].find(p_parse->file_type) != string::npos)
+    if (locs.find("type_cgi") != locs.end() && (locs.find("cgi_bin_py") != locs.end()
+        || locs.find("cgi_bin_js") != locs.end())) {
+        if (locs["type_cgi"].find(p_parse->file_type) != string::npos){
             return true;
+        }
     }
     return false;
 }
@@ -50,7 +53,7 @@ bool Webserver::_handle_cgi(const string& path, const map<string, string>& loc, 
         fd = open("/tmp/output.txt", O_RDONLY | O_WRONLY | O_CREAT, 0666);
         dup2(fd, 1);
         // fclose(stdout);
-        if (execve(command.c_str(), argv, NULL) == -1) {
+        if (execve(command.c_str(), argv, envp) == -1) {
             _set_error_code("500", "Internal Server Error", "");
             return false;
         }
@@ -85,7 +88,12 @@ bool Webserver::_handle_cgi(const string& path, const map<string, string>& loc, 
 }
 
 bool    Webserver::_handle_cgi(const string& path, const map<string, string>& loc, post_parse* p_parse) {
-    string command = loc.find("cgi_bin")->second;
+
+    string command;
+    if (p_parse->file_type == "py")
+        command = loc.find("cgi_bin_py")->second;
+    else if (p_parse->file_type == "js")
+        command = loc.find("cgi_bin_js")->second;
     char* argv[4];
     argv[0] = (char*)command.c_str();
     argv[1] = (char*)path.c_str();
@@ -99,6 +107,7 @@ bool    Webserver::_handle_cgi(const string& path, const map<string, string>& lo
     else
         argv[2] = (char*)p_parse->body[0].value.c_str();
     argv[3] = NULL;
+    
     int fd_out = 0;
     string body = p_parse->body[0].value;
     pid_t pid = fork();
@@ -111,7 +120,7 @@ bool    Webserver::_handle_cgi(const string& path, const map<string, string>& lo
             return false;
         }
         dup2(fd_out, 1);
-        if (execve(command.c_str(), argv, NULL) == -1) {
+        if (execve(command.c_str(), argv, envp) == -1) {
             _set_error_code("500", "Internal Server Error", "");
             return false;
         }
@@ -133,10 +142,9 @@ bool    Webserver::_handle_cgi(const string& path, const map<string, string>& lo
         while ((ret = read(fd_2, buffer, 1)) > 0) {
             output += string(buffer, ret);
         }
+        p_parse->buffer = output;
         if (p_parse->file_type == "py")
             remove(argv[2]);
-        p_parse->buffer = output;
-
         if (ret == -1) {
             _set_error_code("500", "Internal Server Error", "");
             return false;
