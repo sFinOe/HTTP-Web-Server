@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:31:27 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 13:28:56 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 14:21:19 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ h_response    *Webserver::_status_line(int code_type)
 		response->code_status = "HTTP/1.1 405 Method Not Allowed\r\n";
 	if (code_type == 413)
 		response->code_status = "HTTP/1.1 413 Payload Too Large\r\n";
+	if (code_type == 415)
+		response->code_status = "HTTP/1.1 415 Unsupported Media Type\r\n";
 	if (code_type == 500)
 		response->code_status = "HTTP/1.1 500 Internal Server Error\r\n";
 

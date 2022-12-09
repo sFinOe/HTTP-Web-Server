@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserver.get_response.cpp                         :+:      :+:    :+:   */
+/*   Web_bonus.get_response.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 13:02:48 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 16:46:07 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 15:09:21 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void    Webserver::_response_redirect(h_response *response, get_parse *g_parse)
 		}
 		else{
 			response->http_header = response->code_status + response->keep_connection
-				+ response->date + response->server_type + response->content_length + response->content_type;
+				+ response->date  + response->server_type + response->content_length + response->content_type;
 		}
 }
 

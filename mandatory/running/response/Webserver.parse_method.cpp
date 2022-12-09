@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:09:57 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/06 20:41:51 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 14:25:22 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,13 @@ h_request* Webserver::_make_request(req_t* req)
 		tmp = split((*str_it), " ");
 		if (tmp[0] == "GET")
 			header->method = GET;
-		if (tmp[0] == "POST")
+		else if (tmp[0] == "POST")
 			header->method = POST;
-		if (tmp[0] == "DELETE")
+		else if (tmp[0] == "DELETE")
 			header->method = DELETE;
+		else{
+			header->method = UNDEFINED;
+		}
 	}
 	tmp.clear();
 	str.clear();

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Web_bonus.parse_method.cpp                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:09:57 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 13:23:34 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/09 14:29:42 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ h_request* Webserver::_make_request(req_t* req)
 		tmp = split((*str_it), " ");
 		if (tmp[0] == "GET")
 			header->method = GET;
-		if (tmp[0] == "POST")
+		else if (tmp[0] == "POST")
 			header->method = POST;
-		if (tmp[0] == "DELETE")
+		else if (tmp[0] == "DELETE")
 			header->method = DELETE;
+		else
+			header->method = UNDEFINED;
 	}
 	tmp.clear();
 	str.clear();

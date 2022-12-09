@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserver_bonus.response.cpp                       :+:      :+:    :+:   */
+/*   Web_bonus.response.cpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 16:01:21 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 18:33:54 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 14:29:53 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ h_response* Webserver::_make_response(req_t* req, v_servers& servers)
 		response->request = _request;
 		response->g_parse = g_parse;
 	}
-	if (_request->method == POST) { // POST METHOD
+	else if (_request->method == POST) { // POST METHOD
 		_request->parsed_method = (void*)_post_method(req);
 		p_parse = (post_parse*)_request->parsed_method;
 		_process_post_request(p_parse, servers);
@@ -62,13 +62,18 @@ h_response* Webserver::_make_response(req_t* req, v_servers& servers)
 		response->request = _request;
 		response->p_parse = p_parse;
 	}
-	if (_request->method == DELETE) { // DELETE METHOD
+	else if (_request->method == DELETE) { // DELETE METHOD
 		_request->parsed_method = (void*)_delete_method(req, servers);
 		d_parse = (delete_parse*)_request->parsed_method;
 		_proccess_delete_request(d_parse, servers);
 		response = _initialize_header(_request, d_parse->status);
 		response->request = _request;
 		response->d_parse = d_parse;
+	}
+	else if (_request->method == UNDEFINED){
+		response = new h_response;
+		response->http_header = "HTTP/1.1 405 Method Not Allowed\r\ncontent-type: text/html\r\n\r\n";
+		response->buffer = "<html><head><title>405 Method Not Allowed</title></head><body><h1>405 Method Not Allowed</h1></body></html>";
 	}
 	return response;
 

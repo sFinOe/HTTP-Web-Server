@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 12:10:42 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/08 16:30:07 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 14:29:34 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 #define GET 1
 #define POST 2
 #define DELETE 3
+#define UNDEFINED 4
 
 
 /***** define of server *****/

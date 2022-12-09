@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserver.send.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 19:31:27 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 13:18:57 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/09 14:14:40 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ h_response    *Webserver::_status_line(int code_type)
 		response->code_status = "HTTP/1.1 405 Method Not Allowed\r\n";
 	if (code_type == 413)
 		response->code_status = "HTTP/1.1 413 Payload Too Large\r\n";
+	if (code_type == 415)
+		response->code_status = "HTTP/1.1 415 Unsupported Media Type\r\n";
 	if (code_type == 500)
 		response->code_status = "HTTP/1.1 500 Internal Server Error\r\n";
 
@@ -77,7 +79,7 @@ h_response    *Webserver::_status_line(int code_type)
 h_response *Webserver::_initialize_header(h_request *request, int code_type)
 {
     h_response *response;
-
+	
     response = _status_line(code_type);
 	if(request->method == GET)
         _get_response(request, response);

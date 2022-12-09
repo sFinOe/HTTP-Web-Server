@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserver.post_response.cpp                        :+:      :+:    :+:   */
+/*   Web_bonus.post_response.cpp                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/30 13:04:51 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 16:46:07 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 14:16:38 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,4 +57,5 @@ void Webserver::_post_response(h_request *request, h_response *response)
     _response_cgi(response, p_parse);
 	p_parse->path = parse_path(p_parse->path, p_parse);
     _response_redirect(response, p_parse);
+
 }

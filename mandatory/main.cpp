@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:40 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/07 15:17:59 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 13:51:07 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ int main(int argc, char** argv)
   }
   catch (std::exception& e) {
     std::cerr << e.what() << std::endl;
+    return 1;
   };
   vector<Webserver>::iterator it = websrvs.begin();
   for (; it != websrvs.end(); ++it) {

@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 16:00:30 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/06 15:53:39 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 15:14:37 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,13 @@ bool Webserver::_find_location(get_parse *g_parse, v_servers::iterator &server_i
 	else {
 		g_parse->status = 405;
 		root = multimap_value(server_it->_server_data, "error_page_405");
+	}
+	if (g_parse->cache_type == "no-cache"){
+		g_parse->status = 200;
+	}
+	else if (g_parse->cache_type.empty() && (g_parse->file_type == "html"
+		|| root.find(".html") != string::npos)){
+		g_parse->status = 304;
 	}
 	if (locs.find("return_301") != locs.end()) {
 		g_parse->status = 301;

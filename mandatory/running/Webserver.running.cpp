@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:26:25 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/07 17:51:51 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 14:57:04 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void Webserver::run(vector<Webserver> servers)
                 if(socket_I(clients, fds, &i))
                     continue;
                 _initialize_response(clients, fds, i, servers);
+                // cout << clients[i].req->headers << endl;
             }
             if ((fds[i].revents & POLLOUT) && (int)i >= num_servers){
                 socket_O(clients, fds, &i);

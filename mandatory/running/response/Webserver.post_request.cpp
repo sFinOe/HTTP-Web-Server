@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 01:07:38 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/07 02:59:05 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 14:14:08 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ string Webserver::parse_path(string path, post_parse* p_parse)
 
 bool Webserver::_find_location(post_parse *p_parse, v_servers::iterator &server_it, map_strings &locs, string &root)
 {
+	bool unsupported = false;
 	p_parse->status = 200;
 
 	if (server_it->_location_data.find(p_parse->path) != server_it->_location_data.end()) {
@@ -97,10 +98,12 @@ bool Webserver::_find_location(post_parse *p_parse, v_servers::iterator &server_
 			root += locs["root"] + p_parse->path + "/" + locs["index"];
 	}
 	else {
+		unsupported = true;
 		p_parse->status = 405;
 		root = multimap_value(server_it->_server_data, "error_page_405");
 	}
 	if (locs.find("return_301") != locs.end()){
+		unsupported = true;
 		p_parse->status = 301;
 		p_parse->location = locs["return_301"];
 		p_parse->path = multimap_value(server_it->_server_data, "page_200_ok");
@@ -108,12 +111,14 @@ bool Webserver::_find_location(post_parse *p_parse, v_servers::iterator &server_
 	}
 
 	if (_entity_too_large(server_it->_server_data, p_parse) && p_parse->status == 200) {
+		unsupported = true;
 		p_parse->status = 413;
 		root = multimap_value(server_it->_server_data, "error_page_413");
 	}
 	else if (locs.find("allow_upload")->second.find("on") != string::npos 
 			&& locs.find("allow")->second.find("POST") != string::npos) {
 				_upload_data(locs["upload_at"], p_parse);
+				unsupported = true;
 				p_parse->status = 201;
 			}
 			
@@ -122,17 +127,11 @@ bool Webserver::_find_location(post_parse *p_parse, v_servers::iterator &server_
 			p_parse->status = 500;
 			root = multimap_value(server_it->_server_data, "error_page_500");
 		}
+		unsupported = true;
 	}
-	cout << p_parse->file_name << endl;
-	if (p_parse->path == "/cgi-bin" && p_parse->file_name == "/login_checker.py"){
-		cout << "cgi-bin login" << endl;
-		if (valid_login(p_parse->buffer)){
-			cout << "valid login" << endl;
-			p_parse->status = 302;
-			p_parse->location = "/";
-		}
-		else
-			fill_login_db(p_parse->body);
+	if (unsupported == false){
+		p_parse->status = 415;
+		p_parse->buffer = "<html><body><h1>415 Unsupported Media Type</h1></body></html>";
 	}
 	return false;
 }

@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:09:25 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 16:44:47 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 13:49:32 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,11 +169,11 @@ void Webserver::exit_error(config_t server_data, locations_t locations, string e
 int location_key_comp(string key)
 {
     // here i check data of location {listen....} anything else then names[6] is error
-    string names[9] = {"root", "index", "allow",
-        "autoindex", "cgi_bin", "return_301", "allow_upload", "type_cgi", "upload_at"};
+    string names[10] = {"root", "index", "allow",
+        "autoindex", "cgi_bin_py", "return_301", "allow_upload", "type_cgi", "upload_at", "cgi_bin_js"};
     if (key.empty())
         return (1);
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 10; i++) {
         if (names[i] == key)
             return 0;
     }
@@ -206,9 +206,17 @@ int Webserver::location_value_comp_2(string key, string value, string *names)
             return 1;
     }
     // check cgi valid executable and valid path
-    if (names[4] == key) {
+    if (names[4] == key || names[10] == key) {
         exists.open(value.c_str(), fstream::in);
-        if (!exists || ((value.find("node") == string::npos) && (value.find("python") == string::npos))){
+        if (!exists){
+            if (key == "cgi_bin_py"){
+                if(key.find("python") == string::npos)
+                    return 1;
+            }
+            if (key == "cgi_bin_js"){
+                if(key.find("node") == string::npos)
+                    return 1;
+            }
             exists.close();
             return 1;
         }
@@ -233,8 +241,8 @@ int Webserver::location_value_comp(string key, string value, locations_it path)
     // here i check values of location root index.......
     DIR *dir;
     string access;
-    string names[9] = {"root", "index", "allow",
-        "autoindex", "cgi_bin", "return_301", "allow_upload", "type_cgi", "upload_at"};
+    string names[10] = {"root", "index", "allow",
+        "autoindex", "cgi_bin_py", "return_301", "allow_upload", "type_cgi", "upload_at", "cgi_bin_js"};
     if (value.empty())
         return 1;
     // check root if valid
