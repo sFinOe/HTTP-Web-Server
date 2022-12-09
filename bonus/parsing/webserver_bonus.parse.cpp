@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_bonus.parse.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:05:53 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 16:44:47 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 19:55:58 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,8 @@ vector<string> Webserver::split_servers(char* path)
         if (valid == 1 && brackets == 0 && v_server == 1) {
             server_line.push_back(line.substr(0, i + 1));
             line.erase(0, i + 1);
-            if (syntax_block(line))
-                throw Webserver::parsingerror();
+            // if (syntax_block(line))
+            //     throw Webserver::parsingerror();
             valid = 0;
             i = 0;
             v_server = 0;

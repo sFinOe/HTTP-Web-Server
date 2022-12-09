@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_bonus.utils.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:06:55 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 16:44:47 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 19:55:53 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,7 @@ int num_check(string value)
 int syntax_block(string line)
 {
     size_t len;
-    if (!line.empty())
-    {
+    if (!line.empty())    {
 
         if (line.find("server ") != string::npos)
             len = line.find("server ");
