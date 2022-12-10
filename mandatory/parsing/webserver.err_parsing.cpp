@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:09:25 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 16:49:15 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/10 19:10:37 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -222,7 +222,7 @@ int Webserver::location_value_comp_2(string key, string value, string *names)
         }
     }
     if (names[7] == key){
-        if (value.find("js") == string::npos)
+        if (value != "js")
             return 1;
     }
     return 0;

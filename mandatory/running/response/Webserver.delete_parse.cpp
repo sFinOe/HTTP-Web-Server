@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 01:16:06 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/06 21:21:38 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 22:25:35 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ string Webserver::parse_path(string path, delete_parse *d_parse)
 
 vector<Webserver>::iterator Webserver::target_server(delete_parse *d_parse, v_servers &servers)
 {
+	server_err = false;
 	vector<Webserver>::iterator it;
 	if (d_parse->host == "localhost")
 		d_parse->host.assign("127.0.0.1");
@@ -54,7 +55,8 @@ vector<Webserver>::iterator Webserver::target_server(delete_parse *d_parse, v_se
 						return it;
 		}
 	}
-	return it;
+	server_err = true;
+	return it = servers.begin();
 }
 
 void Webserver::_parse_header(delete_parse *d_parse, req_t* req)
@@ -139,6 +141,11 @@ delete_parse *Webserver::_delete_method(req_t* req, v_servers &servers)
 	_parse_header(d_parse, req);
 	d_parse->path = parse_path(d_parse->path, d_parse); // path funtion
 	server_it = target_server(d_parse, servers);
+	if (server_err){
+		d_parse->status = 500;
+		d_parse->path = multimap_value(server_it->_server_data, "error_page_500");
+		return d_parse;
+	}
 	if(_find_location(d_parse, server_it, locs, root))
 		return d_parse;
 	tmp_path = parse_path(root, d_parse);

@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 16:00:30 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 16:22:08 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 22:28:43 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 vector<Webserver>::iterator Webserver::target_server(get_parse* g_parse, v_servers& servers)
 {
+	server_err = false;
 	vector<Webserver>::iterator it;
 	if (g_parse->host == "localhost")
 		g_parse->host.assign("127.0.0.1");
@@ -29,7 +30,8 @@ vector<Webserver>::iterator Webserver::target_server(get_parse* g_parse, v_serve
 						return it;
 		}
 	}
-	return it;
+	server_err = true;
+	return it = servers.begin();
 }
 
 
@@ -124,13 +126,6 @@ bool Webserver::_find_location(get_parse *g_parse, v_servers::iterator &server_i
 		g_parse->status = 405;
 		root = multimap_value(server_it->_server_data, "error_page_405");
 	}
-	// if (g_parse->cache_type == "no-cache"){
-	// 	g_parse->status = 200;
-	// }
-	// else if (g_parse->cache_type.empty() && (g_parse->file_type == "html"
-	// 	|| root.find(".html") != string::npos)){
-	// 	g_parse->status = 304;
-	// }
 	if (locs.find("return_301") != locs.end()) {
 		g_parse->status = 301;
 		g_parse->location = locs["return_301"];
@@ -157,6 +152,11 @@ get_parse* Webserver::_get_method(req_t* req, v_servers& servers)
 
 	_parse_header(g_parse, req);
 	server_it = target_server(g_parse, servers);
+	if (server_err){
+		g_parse->status = 500;
+		g_parse->path = multimap_value(server_it->_server_data, "error_page_500");
+		return g_parse;
+	}
 	if(_find_location(g_parse, server_it, locs, root))
 		return g_parse;
 	_response_error(g_parse, root, server_it, locs);

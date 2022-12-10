@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:06 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 18:05:46 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 22:27:07 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -359,6 +359,7 @@ private:
 	map<string, user> _users;
 	vector<void*> _free;
 	char **envp;
+	bool server_err;
 
 
 	/**************** private member types *****************/
