@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Web_bonus.running.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:26:25 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 18:06:15 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/10 20:56:14 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,6 @@ void Webserver::run(vector<Webserver> servers)
                 string path = clients[i].req->status_line.substr(clients[i].req->status_line.find(" ") + 1);
                 path = path.substr(0, path.find(" "));
                 if (path == "/game/") {
-                    cout << "game" << endl;
                     if (!_valid_session(clients[i].req->headers, servers))
                         _handle_invalid_session(clients[i].fd);
                 }

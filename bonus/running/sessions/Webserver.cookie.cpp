@@ -6,7 +6,7 @@
 /*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 16:51:04 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 13:27:04 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/10 21:00:13 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,12 @@ bool    Webserver::_valid_session(const string& headers, vector<Webserver>& serv
     exp_date = exp_date.substr(0, exp_date.find("\r\n"));
 
     cookie = cookie.substr(0, cookie.find("\r\n"));
-    cookie = cookie.substr(cookie.find("=") + 1);
+    cookie = cookie.substr(cookie.find("id=") + 3);
     cookie = cookie.substr(0, cookie.find(";"));
 
 
 
     // if cookie doesn't belong to any user 
-
 
     if (server->_users.find(cookie) == server->_users.end()) {
         return false;

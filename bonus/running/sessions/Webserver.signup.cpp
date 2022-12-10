@@ -6,7 +6,7 @@
 /*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/07 12:48:00 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 13:15:23 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/10 20:55:39 by ren-nasr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ bool Webserver::_signup(const string& email, const string& password, Webserver* 
     // if user already exist ret
     if (server->_users.size() > 0) {
         map<string, user>::iterator it = server->_users.begin();
-
         while (it != server->_users.end())
         {
             if (it->second.email == email)
@@ -47,7 +46,6 @@ bool Webserver::_signup(const string& email, const string& password, Webserver* 
     }
     // create new user
     string* id = new string(_generate_id());
-
     user* new_user = new user();
     new_user->email = email;
     new_user->password = password;;
