@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   webserver_bonus.parse.cpp                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 22:05:53 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 19:55:58 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/10 20:40:13 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,10 @@ vector<Webserver> Webserver::parse(char* path)
     vector<Webserver> servers;
     vector<string> server_line;
     // seperated by server { and } 
-    server_line = split_servers(path);
+    server_line = split_servers(path);    
     // i iterate over the vector and and parse each server element then puch_back it to vector of Webserver LOL im Good <3
     for (vector<string>::iterator it = server_line.begin(); it != server_line.end(); it++) {
+        
         // parse locaion and fill _location with path & data
         locations = parse_locations(*it, locations);
         // line is clean from locations {....} from previous funtion !!!!!!!!!!!!
@@ -76,7 +77,8 @@ vector<Webserver> Webserver::parse(char* path)
         locations.clear();
         server_data.clear();
         mime_types.clear();
-    }
+        
+    }    
     if (servers.empty()) {
         cerr << "error : empty server" << endl, throw Webserver::parsingerror();
     }

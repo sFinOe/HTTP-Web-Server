@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:40 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 18:05:39 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/10 20:31:30 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ int main(int argc, char** argv, char **env)
   try {
 
     websrvs = Webserver::parse(argv[1]);
+    
   }
   catch (std::exception& e) {
     std::cerr << e.what() << std::endl;

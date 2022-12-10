@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/09 14:16:41 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 17:56:19 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/10 20:41:06 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,18 @@
 // defining the static variable
 set<int> Webserver::_sockets;
 
+void handler(int sig)
+{
+    if(sig)
+        exit(0);
+}
+
 Webserver::~Webserver() {
     for(vector<void*>::iterator it = _free.begin(); it != _free.end(); ++it) {
         free(*it);
     }
     _free.clear();
+    signal(SIGINT, handler);
 }
 
 // Constructors 
