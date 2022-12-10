@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 01:07:38 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 19:06:48 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 22:24:58 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 vector<Webserver>::iterator Webserver::target_server(post_parse* p_parse, v_servers& servers)
 {
+	server_err = false;
 	vector<Webserver>::iterator it;
 	if (p_parse->host == "localhost")
 		p_parse->host.assign("127.0.0.1");
@@ -29,7 +30,8 @@ vector<Webserver>::iterator Webserver::target_server(post_parse* p_parse, v_serv
 						return it;
 		}
 	}
-	return it;
+	server_err = true;
+	return it = servers.begin();
 }
 
 void Webserver::_upload_data(string root, post_parse* p_parse)
@@ -123,7 +125,6 @@ bool Webserver::_find_location(post_parse *p_parse, v_servers::iterator &server_
 			}
 			
 	if (_is_cgi(p_parse, locs)) {
-		cout << "CGI" << endl;
 		if (!_handle_cgi(root, locs, p_parse)) {
 			p_parse->status = 500;
 			root = multimap_value(server_it->_server_data, "error_page_500");
@@ -148,6 +149,11 @@ void Webserver::_process_post_request(post_parse* p_parse, v_servers& servers)
 	p_parse->path = parse_path(p_parse->path, p_parse); // path funtion
 	replace_all(p_parse->path, "//", "/");
 	server_it = target_server(p_parse, servers);
+	if (server_err){
+		p_parse->status = 500;
+		p_parse->path = multimap_value(server_it->_server_data, "error_page_500");
+		return;
+	}
 	if (_find_location(p_parse, server_it, locs, root))
 		return ;
 	_response_error(p_parse, root, server_it);

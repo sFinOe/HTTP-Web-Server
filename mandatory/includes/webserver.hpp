@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:06 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/09 18:13:54 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/09 22:17:01 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -314,6 +314,7 @@ private:
 	h_response* _response;
 	h_request* _request;
 	char **envp;
+	bool server_err;
 	
 	vector<void *> _free;
 	/**************** private member types *****************/

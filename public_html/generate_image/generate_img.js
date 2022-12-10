@@ -107,7 +107,9 @@ input.addEventListener("keyup", function(event) {
     	}).then(response => {
 			if (response.status === 200) {
 				response.text().then(url => {
+                    console.log(url);
                     window.open(url, '_blank');
+                    // window.location.append(url);
     	        });
     	    } else {
 				console.log("error");
