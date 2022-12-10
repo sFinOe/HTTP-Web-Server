@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/27 01:07:38 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 22:24:58 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/10 17:04:39 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,8 @@ bool Webserver::_find_location(post_parse *p_parse, v_servers::iterator &server_
 			p_parse->status = 500;
 			root = multimap_value(server_it->_server_data, "error_page_500");
 		}
-		unsupported = true;
+		else
+			unsupported = true;
 	}
 	if (unsupported == false){
 		p_parse->status = 415;
