@@ -23,8 +23,8 @@ PREFIX = ./obj/
 OBJS = $(addprefix $(PREFIX), $(SRCS:.cpp=.o))
 OBJS_BONUS = $(addprefix $(PREFIX), $(SRCS_BONUS:.cpp=.o))
 
-all: $(NAME)
-bonus: $(BONUS)
+all: $(shell ./config.sh)  $(NAME) 
+bonus: $(shell ./config.sh)  $(BONUS)
 
 $(PREFIX) :
 	@mkdir -p $(PREFIX)

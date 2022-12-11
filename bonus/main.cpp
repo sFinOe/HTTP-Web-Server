@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:23:40 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/10 20:31:30 by zkasmi           ###   ########.fr       */
+/*   Updated: 2022/12/11 19:50:24 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int main(int argc, char** argv, char **env)
   
   vector<Webserver> websrvs;
   if (argc < 2)
-    argv[1] = (char*)"./config/default.conf";
+    argv[1] = (char*)"./config/bonus.conf";
   fstream file(argv[1], fstream::in);
   if (!file)
     return 1;

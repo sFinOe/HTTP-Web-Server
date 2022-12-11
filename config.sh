@@ -1,4 +1,168 @@
-types {
+#!/bin/bash
+
+export _python_path=$(which python3)
+export _node_path=$(which node)
+export _user_path=$(pwd)
+
+echo "
+server 
+{         
+
+	include			config/mime.types;
+
+	listen           6060;
+	host			127.0.0.1;
+	client_max_body_size 10m;
+
+	error_page_400	"$_user_path"/public_html/html_pages/error_400.html;
+	error_page_403	"$_user_path"/public_html/html_pages/error_403.html;
+	error_page_404	"$_user_path"/public_html/html_pages/error_404.html;
+	error_page_405	"$_user_path"/public_html/html_pages/error_405.html;
+	error_page_413	"$_user_path"/public_html/html_pages/error_413.html;
+	error_page_500	"$_user_path"/public_html/html_pages/error_500.html;
+
+	page_200_ok			"$_user_path"/public_html/html_pages/200_ok.html;
+	page_200_delete		"$_user_path"/public_html/html_pages/delete_200.html;
+	page_201_created	"$_user_path"/public_html/html_pages/created_201.html;
+	page_204_no_content	"$_user_path"/public_html/html_pages/no_content_204.html;
+
+	location / 
+	{
+		root "$_user_path"/public_html;
+		index index.html;
+		allow [GET];
+		autoindex on;
+	}
+
+	location /upload {
+
+		root "$_user_path"/public_html;
+		allow_upload on;
+		upload_at "$_user_path"/public_html/trash;
+		allow [POST, GET];
+	}
+
+	location /trash
+	{
+		root "$_user_path"/public_html;
+		autoindex off;
+		allow [GET, DELETE];
+	}
+
+	location /cgi-bin
+	{
+		root "$_user_path"/public_html;
+		type_cgi js;
+		cgi_bin "$_node_path";
+		allow [GET, POST];
+
+	}
+	location /delete
+	{
+		root "$_user_path"/public_html;
+		allow [GET, DELETE];
+	}
+	location /redirect
+	{
+		root "$_user_path"/public_html;
+		return_301 https://disposkill.com;
+	}
+}
+" > config/default.conf
+
+echo "
+server 
+{         
+
+	include			config/mime.types;
+
+	listen           6060;
+	host			127.0.0.1;
+	client_max_body_size 10m;
+
+	error_page_400	"$_user_path"/public_html/html_pages/error_400.html;
+	error_page_403	"$_user_path"/public_html/html_pages/error_403.html;
+	error_page_404	"$_user_path"/public_html/html_pages/error_404.html;
+	error_page_405	"$_user_path"/public_html/html_pages/error_405.html;
+	error_page_413	"$_user_path"/public_html/html_pages/error_413.html;
+	error_page_500	"$_user_path"/public_html/html_pages/error_500.html;
+
+	page_200_ok			"$_user_path"/public_html/html_pages/200_ok.html;
+	page_200_delete		"$_user_path"/public_html/html_pages/delete_200.html;
+	page_201_created	"$_user_path"/public_html/html_pages/created_201.html;
+	page_204_no_content	"$_user_path"/public_html/html_pages/no_content_204.html;
+
+	location / 
+	{
+		root "$_user_path"/public_html;
+		index index.html;
+		allow [GET];
+		autoindex on;
+	}
+
+	location /upload {
+
+		root "$_user_path"/public_html;
+		allow_upload on;
+		upload_at "$_user_path"/public_html/trash;
+		allow [POST, GET];
+	}
+
+	location /trash
+	{
+		root "$_user_path"/public_html;
+		autoindex off;
+		allow [GET, DELETE];
+	}
+
+	location /cgi-bin
+	{
+		root "$_user_path"/public_html;
+		type_cgi js, py;
+		cgi_bin_js "$_node_path";
+		cgi_bin_py "$_python_path";
+		allow [GET, POST];
+
+	}
+	location /delete
+	{
+		root "$_user_path"/public_html;
+		allow [GET, DELETE];
+	}
+	location /login 
+	{
+		root "$_user_path"/public_html;
+		allow [GET, POST];
+	}
+	location /signup
+	{
+		root "$_user_path"/public_html;
+		allow [GET, POST];
+	}
+	location /game
+	{
+		root "$_user_path"/public_html;
+		allow [GET];
+	}
+	location /img_convertor
+	{
+		root "$_user_path"/public_html;
+		allow [GET, POST];
+	}
+	location /generate_image
+	{
+		root "$_user_path"/public_html;
+		allow [GET, POST];
+	}
+	location /redirect
+	{
+		root "$_user_path"/public_html;
+		return_301 https://disposkill.com;
+	}
+}
+" > config/bonus.conf
+
+echo "types {
 
     html                                    text/html;
     css                                     text/css;
@@ -86,4 +250,4 @@ types {
     asx                                     video/x-ms-asf;
     wmv                                     video/x-ms-wmv;
     avi                                     video/x-msvideo;
-}
+}" > config/mime.types

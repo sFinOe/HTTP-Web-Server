@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Webserver.cookie.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ren-nasr <ren-nasr@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/08 16:51:04 by ren-nasr          #+#    #+#             */
-/*   Updated: 2022/12/10 21:00:13 by ren-nasr         ###   ########.fr       */
+/*   Updated: 2022/12/11 20:00:00 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,6 @@ void Webserver::_cookies(vector<t_client>& clients, size_t i, vector<Webserver>&
 
         if (!_valid_login(u, server))
         {
-            cout << "invalid login" << endl;
             string header = "HTTP/1.1 401 Unauthorized\r\n";
             string body = "Unauthorized";
             string resp = header + "Content-Type: text/html\r\nContent-Length: " + _to_string(body.size()) + "\r\n\r\n" + body;
