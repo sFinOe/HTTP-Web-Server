@@ -6,7 +6,7 @@
 NAME = webserv
 BONUS = webserv_bonus
 CC = c++
-CXXFLAGS= -Wall -Wextra -Werror -std=c++11 -g
+CXXFLAGS= -Wall -Wextra -Werror -std=c++98 -g
 RM = rm -rf
 INCLUDE = ./mandatory/includes/webserver.hpp ./mandatory/includes/common.hpp
 INCLUDE_BONUS = ./bonus/includes/webserver_bonus.hpp ./bonus/includes/common_bonus.hpp

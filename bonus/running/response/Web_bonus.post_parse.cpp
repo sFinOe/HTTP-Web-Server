@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Webserver.post_parse.cpp                           :+:      :+:    :+:   */
+/*   Web_bonus.post_parse.cpp                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/26 16:12:04 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/08 16:46:07 by zkasmi           ###   ########.fr       */
+/*   Updated: 2023/01/06 16:32:25 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,8 @@ void Webserver::_parse_header(post_parse *p_parse, req_t* req)
 			tmp = split((*str_it), ":");
 			p_parse->host = trim(tmp[1], " \n\r\f\t");
 			p_parse->port = trim(tmp[2], " \n\r\f\t");
+			if(tmp[2].empty())
+				p_parse->port = "80";
 			tmp.clear();
 		}
         if ((*str_it).find("Cache-Control:") != string::npos){

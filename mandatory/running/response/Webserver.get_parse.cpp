@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 16:00:30 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 22:23:11 by zkasmi           ###   ########.fr       */
+/*   Updated: 2023/01/06 16:29:36 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ void Webserver::_parse_header(get_parse *g_parse, req_t* req)
 			tmp = split((*str_it), ":");
 			g_parse->host = trim(tmp[1], " \n\r\f\t");
 			g_parse->port = trim(tmp[2], " \n\r\f\t");
+			if (tmp[2].empty())
+				g_parse->port = "80";
 			tmp.clear();
 		}
 		if ((*str_it).find("Cache-Control:") != string::npos) {
@@ -126,13 +128,6 @@ bool Webserver::_find_location(get_parse *g_parse, v_servers::iterator &server_i
 		g_parse->status = 405;
 		root = multimap_value(server_it->_server_data, "error_page_405");
 	}
-	// if (g_parse->cache_type == "no-cache"){
-	// 	g_parse->status = 200;
-	// }
-	// else if (g_parse->cache_type.empty() && (g_parse->file_type == "html"
-	// 	|| root.find(".html") != string::npos)){
-	// 	g_parse->status = 304;
-	// }
 	if (locs.find("return_301") != locs.end()) {
 		g_parse->status = 301;
 		g_parse->location = locs["return_301"];

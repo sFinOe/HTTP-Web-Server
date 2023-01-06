@@ -6,7 +6,7 @@
 /*   By: zkasmi <zkasmi@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 01:16:06 by zkasmi            #+#    #+#             */
-/*   Updated: 2022/12/09 22:29:05 by zkasmi           ###   ########.fr       */
+/*   Updated: 2023/01/06 16:31:59 by zkasmi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void Webserver::_parse_header(delete_parse *d_parse, req_t* req)
 			tmp = split((*str_it), ":");
 			d_parse->host = trim(tmp[1], " \n\r\f\t");
 			d_parse->port = trim(tmp[2], " \n\r\f\t");
+			if (tmp[2].empty())
+				d_parse->port = "80";
 			tmp.clear();
 		}
         if ((*str_it).find("Cache-Control:") != string::npos){
